@@ -6,7 +6,18 @@ from sqlalchemy.orm import Session
 from db_generator import Base, FileData, MetaData, EDM264_C, EDM264_L, EDM264_dM, EDM264_M
 from logger import getgglogger
 
+import argparse
+
 logger = getgglogger(__name__)
+
+parser = argparse.ArgumentParser(description='Process EDM264 logfiles into a sqlite database')
+
+parser.add_argument("-l", "--log-folder", dest="log_folder",
+                    help="log folder", type=str, default='log_folder')
+parser.add_argument("-p", "--db-path", dest="db_path",
+                    help="database path (could be relative to the working folder or absolute)", type=str, default='database/')
+parser.add_argument("-f", "--db-filename", dest="db_filename",
+                    help="database filename", type=str, default='db.sqlite')
 
 
 def file_already_processed(hash_digest):
@@ -25,24 +36,27 @@ def get_or_create(session, model, **kwargs):
 
 
 if __name__ == "__main__":
-    engine = create_engine("sqlite+pysqlite:///database/db.sqlite", echo=True, future=True)
+    # capture filenames and options from cli
+    args = parser.parse_args()
+
+    engine = create_engine(f"sqlite+pysqlite:///{os.path.join(args.db_path, args.db_filename)}", echo=True, future=True)
+    log_folder = args.log_folder
+
     Base.metadata.create_all(engine)
 
     dbsession = Session(engine)
 
     from datfile_reader import DatFile, filetype_re_rule
 
-    # cycles all files in folder, and adds a
-    folder = 'log_folder'
-
-    for filename in os.listdir(folder):
+    # cycles all logfiles in log_folder
+    for filename in os.listdir(log_folder):
         logger.debug(f'Reading {filename}')
         filetype_re = filetype_re_rule.match(filename)
         if filetype_re:
             filetype = filetype_re["filetype"]
             logger.debug(f'{filename} is of type {filetype_re["filetype"]}')
             datfile = DatFile(
-                os.path.join(folder, filename),
+                os.path.join(log_folder, filename),
             )
             if not file_already_processed(datfile.hash_digest):
                 file_header, data = datfile.file_header, datfile.data
