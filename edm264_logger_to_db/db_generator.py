@@ -212,5 +212,10 @@ class EDM264_M(Base):
     related_file = relationship("FileData", back_populates="edm264_m_tables")
     metadata_related = relationship("MetaData", back_populates="edm264_m_tables")
 
+    # from https://stackoverflow.com/questions/5022066/how-to-serialize-sqlalchemy-result-to-json
+    def as_dict(self):
+        columns = ['datetime', 'pm10', 'pm2_5', 'pm1']
+        return {c: getattr(self, c) for c in columns}
+
     def __repr__(self):
         return f"EDM264_L(id={self.id!r}, datetime={self.datetime!r})"

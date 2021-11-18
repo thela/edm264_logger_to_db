@@ -4,20 +4,11 @@ from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
 from db_generator import Base, FileData, MetaData, EDM264_C, EDM264_L, EDM264_dM, EDM264_M
+from cli_parser import parser
 from logger import getgglogger
 
-import argparse
 
 logger = getgglogger(__name__)
-
-parser = argparse.ArgumentParser(description='Process EDM264 logfiles into a sqlite database')
-
-parser.add_argument("-l", "--log-folder", dest="log_folder",
-                    help="log folder", type=str, default='log_folder')
-parser.add_argument("-p", "--db-path", dest="db_path",
-                    help="database path (could be relative to the working folder or absolute)", type=str, default='database/')
-parser.add_argument("-f", "--db-filename", dest="db_filename",
-                    help="database filename", type=str, default='db.sqlite')
 
 
 def file_already_processed(hash_digest):
@@ -177,7 +168,3 @@ if __name__ == "__main__":
                         )
                         dbsession.add(data_row_instance)
     dbsession.commit()
-    print(
-        dbsession.execute(select(FileData)).first()
-    )
-    print(engine)
