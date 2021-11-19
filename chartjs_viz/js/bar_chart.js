@@ -5,7 +5,7 @@ var $element = document.getElementById("pm");
 if ($element !== null){
     var pm_analysisChart;
     var pm_analysis_ctx = $element.getContext("2d"),
-        italia_data = {},
+        pm_data = {},
         pm_analysis_labels = ["pm10","pm2_5", "pm1"],
         pm_analysis_borderColor = {
             'pm10': 'rgba(100, 0, 0, 1)',
@@ -27,13 +27,13 @@ if ($element !== null){
         processedData = pm_analysisprocessData(results);
 
         var presets = window.chartColors;
-        italia_data = {
+        pm_data = {
             labels: processedData.x_labels,
             datasets: []
         };
 
         for(i=0; i<pm_analysis_labels.length; i++){
-            italia_data['datasets'].push(
+            pm_data['datasets'].push(
                 {
                     label: pm_analysis_labels[i],
                     data: processedData.data[pm_analysis_labels[i]],
@@ -54,7 +54,7 @@ if ($element !== null){
             plugins: {
                 title: {
                     display: true,
-                    text: 'Particulate matter'
+                    text: 'Particulate matter for ' + results['datetime'].slice(0,10)
                 },
                 },
             scales: {
@@ -84,7 +84,7 @@ if ($element !== null){
 
         pm_analysisChart = new Chart(pm_analysis_ctx, {
             type: 'bar',
-            data: italia_data,
+            data: pm_data,
             options: options
         });
 
@@ -97,7 +97,7 @@ var pm_analysisprocessData = function(jsonData)
 {
     //var locale = "en-us";
     myformat = Intl.NumberFormat('it-it', { minimumIntegerDigits: 2 })
-    var x_labels = Object.keys(jsonData).map(function(item) {
+    var x_labels = Object.keys(jsonData["data"]).map(function(item) {
         return new Date(item);
     }).sort((a, b) => a - b);
 
@@ -111,9 +111,9 @@ var pm_analysisprocessData = function(jsonData)
             // ci sono 3 ore di shift?
             date_string = x_labels[j].getFullYear()+'-'+myformat.format(x_labels[j].getMonth()+1)+'-'+myformat.format(x_labels[j].getDate())+' '+myformat.format(x_labels[j].getHours())+':'+myformat.format(x_labels[j].getMinutes())+':'+myformat.format(x_labels[j].getSeconds())
 
-            if(jsonData[date_string]){
+            if(jsonData["data"][date_string]){
                 dataSet[pm_analysis_labels[i]].push(
-                    jsonData[date_string][pm_analysis_labels[i]])
+                    jsonData["data"][date_string][pm_analysis_labels[i]])
             } else {
                 console.log(date_string)
             }
