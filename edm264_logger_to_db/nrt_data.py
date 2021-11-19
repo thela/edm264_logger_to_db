@@ -33,15 +33,17 @@ if __name__ == "__main__":
 
     dbsession = Session(engine)
 
+    latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
     query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime).filter(
-                EDM264_M.datetime > datetime.datetime.today() - datetime.timedelta(days=5)
+                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=1)
             )
     #query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-30:]
-    json.dump(
-        {
+    json.dump({
+        "datetime": latest_datetime,
+        "data": {
             instance.datetime.__str__(): instance.as_dict()
             for instance in query
-        },
+        }},
         fp=open(os.path.join(json_path, json_filename), 'w'),
         default=json_serial
     )
