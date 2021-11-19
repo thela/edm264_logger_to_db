@@ -21,6 +21,28 @@ def json_serial(obj):
         return obj.__str__()
 
 
+def makebin(measures, minutes_per_bin=10):
+    binned_data = {}
+    for measure in measures:
+        bin_time = measure.datetime.replace(second=0, minute=measure.datetime.minute//minutes_per_bin*minutes_per_bin).__str__()
+        if bin_time in binned_data:
+            binned_data[bin_time]['count'] += 1
+            for key, value in measure.as_dict().items():
+                if key != 'datetime':
+                    binned_data[bin_time][key] += value
+        else:
+            binned_data[bin_time] = measure.as_dict()
+            binned_data[bin_time]['datetime'] = bin_time
+            binned_data[bin_time]['count'] = 1
+
+    for bin_date, measure in binned_data.items():
+        for key, value in measure.items():
+            if key not in ['datetime', 'count']:
+                measure[key] = measure[key]*minutes_per_bin/measure['count']
+
+    return binned_data
+
+
 if __name__ == "__main__":
     # capture filenames and options from cli
     args = parser.parse_args()
@@ -38,12 +60,11 @@ if __name__ == "__main__":
                 EDM264_M.datetime > latest_datetime - datetime.timedelta(days=1)
             )
     #query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-30:]
-    json.dump({
-        "datetime": latest_datetime,
-        "data": {
-            instance.datetime.__str__(): instance.as_dict()
-            for instance in query
-        }},
+    json.dump(
+        {
+            "datetime": latest_datetime,
+            "data":  makebin(query, minutes_per_bin=20),
+        },
         fp=open(os.path.join(json_path, json_filename), 'w'),
         default=json_serial
     )
