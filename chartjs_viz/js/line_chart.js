@@ -6,16 +6,16 @@ if ($element !== null){
     var pm_analysisChart;
     var pm_analysis_ctx = $element.getContext("2d"),
         pm_data = {},
-        pm_analysis_labels = ["pm10","pm2_5", "pm1"],
+        pm_analysis_labels = ["pm1","pm2_5", "pm10" ],
         pm_analysis_borderColor = {
-            'pm10': 'rgba(100, 0, 0, 1)',
-            'pm2_5': 'rgba(200, 0, 0, 1)',
             'pm1': 'rgba(255, 0, 0, 1)',
+            'pm2_5': 'rgba(200, 0, 0, 1)',
+            'pm10': 'rgba(100, 0, 0, 1)',
         },
         pm_analysis_backgroundColor = {
-            'pm10': 'rgba(100, 0, 0, .6)',
-            'pm2_5': 'rgba(200, 0, 0, .6)',
             'pm1': 'rgba(255, 0, 0, .6)',
+            'pm2_5': 'rgba(200, 0, 0, .6)',
+            'pm10': 'rgba(100, 0, 0, .6)',
         };
 
     // using jQuery ajax method get data from the external file. ( while using react you will do it differently)
@@ -37,13 +37,9 @@ if ($element !== null){
                 {
                     label: pm_analysis_labels[i],
                     data: processedData.data[pm_analysis_labels[i]],
+                    borderColor: processedData.borderColor[pm_analysis_labels[i]],
                     backgroundColor: processedData.backgroundColor[pm_analysis_labels[i]],
-
-                    barPercentage: 0.5,
-                    barThickness: 6,
-                    maxBarThickness: 8,
-                    minBarLength: 2,
-
+                    fill: true,
                 }
             )
 
@@ -51,6 +47,7 @@ if ($element !== null){
         var options = {
             maintainAspectRatio: false,
             responsive: true,
+            spanGaps: false,
             plugins: {
                 title: {
                     display: true,
@@ -84,7 +81,7 @@ if ($element !== null){
         };
 
         pm_analysisChart = new Chart(pm_analysis_ctx, {
-            type: 'bar',
+            type: 'line',
             data: pm_data,
             options: options
         });

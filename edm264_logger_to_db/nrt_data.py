@@ -14,6 +14,8 @@ parser.add_argument("-jp", "--json-path", dest="json_path",
                     help="json path (could be relative to the working folder or absolute)", type=str, default='chartjs_viz')
 parser.add_argument("-jf", "--json-filename", dest="json_filename",
                     help="json filename", type=str, default='pm.json')
+parser.add_argument("-b", "--bin-span", dest="binning_size",
+                    help="binning size in minutes", type=int, default=10)
 
 
 def json_serial(obj):
@@ -52,7 +54,7 @@ if __name__ == "__main__":
     json_filename = args.json_filename
     json_path = args.json_path
     Base.metadata.create_all(engine)
-
+    binning_size = args.binning_size
     dbsession = Session(engine)
 
     latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
