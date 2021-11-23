@@ -42,7 +42,8 @@ def makebin(measures, minutes_per_bin=10):
     for bin_date, measure in binned_data.items():
         for key, value in measure.items():
             if key not in ['datetime', 'count']:
-                measure[key] = measure[key]*minutes_per_bin/measure['count']
+                #measure[key] = measure[key]*minutes_per_bin/measure['count']
+                measure[key] = measure[key]/measure['count']
 
     return binned_data
 
