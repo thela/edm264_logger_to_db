@@ -69,7 +69,7 @@ if __name__ == "__main__":
     json.dump(
         {
             "datetime": latest_datetime,
-            "data":  makebin(query, minutes_per_bin=10),
+            "data":  makebin(query, minutes_per_bin=binning_size),
         },
         fp=open(os.path.join(json_path, json_filename), 'w'),
         default=json_serial
