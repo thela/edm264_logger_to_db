@@ -60,7 +60,7 @@ if __name__ == "__main__":
 
     latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
     query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime).filter(
-                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=2)
+                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=3)
             )
     #query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-30:]
     json.dump(

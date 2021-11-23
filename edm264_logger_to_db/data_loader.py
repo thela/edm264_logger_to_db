@@ -31,7 +31,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     engine = create_engine(f"sqlite+pysqlite:///{os.path.join(args.db_path, args.db_filename)}",
-                           echoFalse, future=True)
+                           echo=False, future=True)
     log_folder = args.log_folder
 
     Base.metadata.create_all(engine)
