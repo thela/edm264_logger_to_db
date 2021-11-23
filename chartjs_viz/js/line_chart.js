@@ -59,14 +59,15 @@ if ($element !== null){
                     display: true,
                     type: 'time',
                     time: {
-                        parser: 'DD/MM/YYYY HH:mm',
+                        parser: 'YYYY-MM-DD HH:mm',
                         tooltipFormat: 'HH:mm DD/MM/YYYY',
-                        unit: 'minute',
-                        unitStepSize: 1,
+                        unit: 'hour',
+                        unitStepSize: 10,
                         displayFormats: {
                             'day': 'DD/MM/YYYY',
+                            'hour': 'DD-MM HH:mm',
 
-                            'minute': 'HH:mm',
+                            'minute': 'DD/MM/YYYY HH:mm',
                         }
                     }
                 },
