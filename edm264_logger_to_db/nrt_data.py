@@ -49,7 +49,8 @@ if __name__ == "__main__":
     # capture filenames and options from cli
     args = parser.parse_args()
 
-    engine = create_engine(f"sqlite+pysqlite:///{os.path.join(args.db_path, args.db_filename)}", echo=True, future=True)
+    engine = create_engine(f"sqlite+pysqlite:///{os.path.join(args.db_path, args.db_filename)}",
+                           echo=False, future=True)
     log_folder = args.log_folder
     json_filename = args.json_filename
     json_path = args.json_path
@@ -59,13 +60,13 @@ if __name__ == "__main__":
 
     latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
     query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime).filter(
-                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=1)
+                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=2)
             )
     #query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-30:]
     json.dump(
         {
             "datetime": latest_datetime,
-            "data":  makebin(query, minutes_per_bin=20),
+            "data":  makebin(query, minutes_per_bin=10),
         },
         fp=open(os.path.join(json_path, json_filename), 'w'),
         default=json_serial

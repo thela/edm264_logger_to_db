@@ -30,7 +30,8 @@ if __name__ == "__main__":
     # capture filenames and options from cli
     args = parser.parse_args()
 
-    engine = create_engine(f"sqlite+pysqlite:///{os.path.join(args.db_path, args.db_filename)}", echo=True, future=True)
+    engine = create_engine(f"sqlite+pysqlite:///{os.path.join(args.db_path, args.db_filename)}",
+                           echoFalse, future=True)
     log_folder = args.log_folder
 
     Base.metadata.create_all(engine)
@@ -50,6 +51,7 @@ if __name__ == "__main__":
                 os.path.join(log_folder, filename),
             )
             if not file_already_processed(datfile.hash_digest):
+                logger.debug(f'{filename} not already processed')
                 file_header, data = datfile.file_header, datfile.data
                 # look for MetaData, and add if not present
                 metadata_object = get_or_create(
