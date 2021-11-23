@@ -16,6 +16,8 @@ parser.add_argument("-jf", "--json-filename", dest="json_filename",
                     help="json filename", type=str, default='pm.json')
 parser.add_argument("-b", "--bin-span", dest="binning_size",
                     help="binning size in minutes", type=int, default=10)
+parser.add_argument("-d", "--days", dest="days",
+                    help="number of days to extract", type=int, default=2)
 
 
 def json_serial(obj):
@@ -56,13 +58,14 @@ if __name__ == "__main__":
     json_path = args.json_path
     Base.metadata.create_all(engine)
     binning_size = args.binning_size
+    days = args.days
     dbsession = Session(engine)
 
     latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
     query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime).filter(
-                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=3)
+                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=days)
             )
-    #query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-30:]
+
     json.dump(
         {
             "datetime": latest_datetime,
