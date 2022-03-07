@@ -48,7 +48,7 @@ def process_datalogfile(filename):
             logger.info(f'{filename} already processed')
         else:
             # TODO come considerare il caso  in cui datfile ha lo stesso nome ma non ha lo stesso contenuto?
-            logger.debug(f'{filename} not already processed')
+            logger.info(f'{filename} is new')
             file_header, data = datfile.file_header, datfile.data
             # look for MetaData, and add if not present
             metadata_object = get_or_create(
@@ -184,7 +184,6 @@ if __name__ == "__main__":
                            echo=False, future=True)
     log_folder = args.log_folder
     logger.info(f'looking into {log_folder} for datalog files')
-
 
     Base.metadata.create_all(engine)
     dbsession = Session(engine)
