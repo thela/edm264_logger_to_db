@@ -10,6 +10,7 @@ from sqlalchemy import create_engine, select
 from db_generator import Base, FileData, MetaData, EDM264_C, EDM264_L, EDM264_dM, EDM264_M
 
 
+# add parsed arguments on top of the parser in cli_parser
 parser.add_argument("-jp", "--json-path", dest="json_path",
                     help="json path (could be relative to the working folder or absolute)", type=str, default='chartjs_viz')
 parser.add_argument("-jf", "--json-filename", dest="json_filename",
@@ -57,9 +58,11 @@ if __name__ == "__main__":
     log_folder = args.log_folder
     json_filename = args.json_filename
     json_path = args.json_path
-    Base.metadata.create_all(engine)
     binning_size = args.binning_size
     days = args.days
+
+    # creates database
+    Base.metadata.create_all(engine)
     dbsession = Session(engine)
 
     latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
