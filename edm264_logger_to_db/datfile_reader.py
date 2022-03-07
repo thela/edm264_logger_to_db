@@ -6,7 +6,7 @@ from logger import getgglogger
 
 logger = getgglogger(__name__)
 filetype_re_rule = \
-    re.compile(r'EDM264-1min_\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])-(?P<filetype>[CdML]{1,2}).dat')
+    re.compile(r'E[DM]{2}264-1min_\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])-(?P<filetype>[CdML]{1,2}).dat')
 
 
 class DatFile:
