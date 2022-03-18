@@ -6,21 +6,19 @@ if ($element !== null){
     var pm_analysisChart;
     var pm_analysis_ctx = $element.getContext("2d"),
         pm_data = {},
-        pm_analysis_labels = ["pm1","pm2_5", "pm10" ],
+        pm_analysis_labels = ["fine","coarse"],
         pm_analysis_borderColor = {
-            'pm1': 'rgba(255, 0, 0, 1)',
-            'pm2_5': 'rgba(200, 0, 0, 1)',
-            'pm10': 'rgba(100, 0, 0, 1)',
+            'fine': 'rgba(200, 0, 0, 1)',
+            'coarse': 'rgba(0, 0, 200, 1)',
         },
         pm_analysis_backgroundColor = {
-            'pm1': 'rgba(255, 0, 0, .6)',
-            'pm2_5': 'rgba(200, 0, 0, .6)',
-            'pm10': 'rgba(100, 0, 0, .6)',
+            'fine': 'rgba(200, 0, 0, .6)',
+            'coarse': 'rgba(0, 0, 200, .6)',
         };
 
     // using jQuery ajax method get data from the external file. ( while using react you will do it differently)
     var jsonData = $.ajax({
-        url: 'pm.json',
+        url: 'json/pm.json',
         dataType: 'json',
     }).done(function(results)
     {
@@ -75,7 +73,7 @@ if ($element !== null){
                     display: true,
                     title: {
                         display: true,
-                        text: 'µm/m³'
+                        text: 'part/cm³'
                     }
                 }
             },

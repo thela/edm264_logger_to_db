@@ -12,7 +12,7 @@ from db_generator import Base, FileData, MetaData, EDM264_C, EDM264_L, EDM264_dM
 
 # add parsed arguments on top of the parser in cli_parser
 parser.add_argument("-jp", "--json-path", dest="json_path",
-                    help="json path (could be relative to the working folder or absolute)", type=str, default='chartjs_viz')
+                    help="json path (could be relative to the working folder or absolute)", type=str, default='chartjs_viz/json/')
 parser.add_argument("-jf", "--json-filename", dest="json_filename",
                     help="json filename", type=str, default='pm.json')
 parser.add_argument("-b", "--bin-span", dest="binning_size",
@@ -49,6 +49,13 @@ def makebin(measures, minutes_per_bin=10):
     return binned_data
 
 
+def query_conteggio_particelle(days):
+    return dbsession.query(EDM264_dM).order_by(EDM264_dM.datetime).filter(
+                EDM264_dM.datetime > latest_datetime - datetime.timedelta(days=days)
+            )
+
+
+
 if __name__ == "__main__":
     # capture filenames and options from cli
     args = parser.parse_args()
@@ -61,14 +68,12 @@ if __name__ == "__main__":
     binning_size = args.binning_size
     days = args.days
 
-    # creates database
+    # creates database object
     Base.metadata.create_all(engine)
     dbsession = Session(engine)
 
-    latest_datetime = dbsession.query(EDM264_M).order_by(EDM264_M.datetime)[-1].datetime
-    query = dbsession.query(EDM264_M).order_by(EDM264_M.datetime).filter(
-                EDM264_M.datetime > latest_datetime - datetime.timedelta(days=days)
-            )
+    latest_datetime = dbsession.query(EDM264_dM).order_by(EDM264_dM.datetime)[-1].datetime
+    query = query_conteggio_particelle(days)
 
     json.dump(
         {
