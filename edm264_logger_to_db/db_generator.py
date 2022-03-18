@@ -97,6 +97,14 @@ class EDM264_C(Base):
 
 class EDM264_dM(Base):
     __tablename__ = 'edm264_dm'
+    grouping = {
+        'fine': [
+            'um253', 'um298', 'um352', 'um414', 'um488', 'um576', 'um679', 'um800', 'um943', 'um1112', 'um1310',
+            'um1545', 'um1821', 'um2146'],
+        'coarse': [
+            'um2530', 'um2982', 'um3515', 'um4144', 'um4884', 'um5757', 'um6787', 'um8000', 'um9430', 'um11120',
+            'um13100', 'um15450', 'um18210', 'um21460', 'um25300', 'um29820', 'um35150']
+    }
 
     id = Column(Integer, primary_key=True)
     datetime = Column(DateTime, nullable=False)
@@ -140,6 +148,16 @@ class EDM264_dM(Base):
 
     def __repr__(self):
         return f"EDM264_dM(id={self.id!r}, datetime={self.datetime!r})"
+
+    def as_dict(self):
+        """
+        :return: datetime and the concentration per cm3 of fine and coarse particles
+        """
+        return {
+            'datetime': self.datetime,
+            'fine': sum([getattr(self, attr) for attr in self.grouping['fine']])*.001,
+            'coarse':  sum([getattr(self, attr) for attr in self.grouping['coarse']])*.001,
+        }
 
 
 class EDM264_L(Base):
@@ -216,6 +234,8 @@ class EDM264_M(Base):
     def as_dict(self):
         columns = ['datetime', 'pm10', 'pm2_5', 'pm1']
         return {c: getattr(self, c) for c in columns}
+
+
 
     def __repr__(self):
         return f"EDM264_L(id={self.id!r}, datetime={self.datetime!r})"
