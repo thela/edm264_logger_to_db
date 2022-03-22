@@ -50,8 +50,8 @@ def makebin(measures, minutes_per_bin=10):
 
 
 def query_conteggio_particelle(days):
-    return dbsession.query(EDM264_dM).order_by(EDM264_dM.datetime).filter(
-                EDM264_dM.datetime > latest_datetime - datetime.timedelta(days=days)
+    return dbsession.query(EDM264_C).order_by(EDM264_C.datetime).filter(
+                EDM264_C.datetime > latest_datetime - datetime.timedelta(days=days)
             )
 
 
