@@ -55,7 +55,6 @@ def query_conteggio_particelle(days):
             )
 
 
-
 if __name__ == "__main__":
     # capture filenames and options from cli
     args = parser.parse_args()
@@ -72,7 +71,7 @@ if __name__ == "__main__":
     Base.metadata.create_all(engine)
     dbsession = Session(engine)
 
-    latest_datetime = dbsession.query(EDM264_dM).order_by(EDM264_dM.datetime)[-1].datetime
+    latest_datetime = dbsession.query(EDM264_C).order_by(EDM264_C.datetime)[-1].datetime
     query = query_conteggio_particelle(days)
 
     json.dump(
