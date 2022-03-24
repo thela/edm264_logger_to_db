@@ -7,6 +7,7 @@ if ($element !== null){
     var pm_analysis_ctx = $element.getContext("2d"),
         pm_data = {},
         pm_analysis_labels = ["fine","coarse"],
+        pm_axis_labels = ["yfine","ycoarse"],
         pm_analysis_borderColor = {
             'fine': 'rgba(200, 0, 0, 1)',
             'coarse': 'rgba(0, 0, 200, 1)',
@@ -38,6 +39,7 @@ if ($element !== null){
                     borderColor: processedData.borderColor[pm_analysis_labels[i]],
                     backgroundColor: processedData.backgroundColor[pm_analysis_labels[i]],
                     fill: true,
+                    yAxisID: pm_axis_labels[i]
                 }
             )
 
@@ -69,11 +71,27 @@ if ($element !== null){
                         }
                     }
                 },
-                y: {
+                yfine: {
                     display: true,
                     title: {
                         display: true,
-                        text: 'part/cm³'
+                        text: 'part/cm³ (fine)'
+                    },
+                    grid: {
+                        borderColor: pm_analysis_borderColor['fine']
+                    }
+                },
+                ycoarse: {
+                    display: true,
+                    title: {
+                        display: true,
+                        text: 'part/cm³ (coarse)',
+                    },
+                    grid: {
+                        borderColor: pm_analysis_borderColor['coarse']
+                    },
+                    ticks: {
+                        color: pm_analysis_borderColor['coarse']
                     }
                 }
             },
